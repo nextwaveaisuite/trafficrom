@@ -12,59 +12,6 @@ import { MEMBERSHIP_TIERS, EMAIL_CATEGORIES } from '../../utils/constants';
 
 const CREDITS_PER_100_RECIPIENTS = 10;
 
-const NICHE_PROMPTS = {
-  'Make Money Online': {
-    angle: 'passive income, financial freedom, working from home, escaping the 9-5',
-    audience: 'people looking to earn extra income online, side hustlers, aspiring entrepreneurs',
-    hooks: ['How I earned $X without any experience', 'The system that generates income while you sleep', 'Why most people fail online (and how to be different)'],
-  },
-  'Affiliate Marketing': {
-    angle: 'earning commissions, promoting products, building a passive income stream through affiliate networks',
-    audience: 'bloggers, content creators, marketers wanting to monetize their audience',
-    hooks: ['The affiliate strategy generating 6-figures', 'Why top affiliates use this one tool', 'Copy this affiliate funnel that converts at 12%'],
-  },
-  'Cryptocurrency': {
-    angle: 'crypto gains, blockchain opportunities, DeFi, altcoins, Bitcoin, market timing',
-    audience: 'crypto enthusiasts, investors, people interested in digital assets',
-    hooks: ['This altcoin is about to explode', 'The crypto strategy Wall Street does not want you to know', 'How to protect your portfolio in any market'],
-  },
-  'Health & Fitness': {
-    angle: 'weight loss, muscle gain, energy, longevity, natural health solutions',
-    audience: 'people wanting to lose weight, get fit, improve their health naturally',
-    hooks: ['Lose weight without starving yourself', 'The morning habit that transforms your body', 'Why you are not losing weight (the real reason)'],
-  },
-  'Business Opportunity': {
-    angle: 'entrepreneurship, starting a business, scaling income, freedom lifestyle',
-    audience: 'aspiring entrepreneurs, people wanting to start their own business',
-    hooks: ['Start a profitable business with $0 investment', 'The business model that runs on autopilot', 'Join 50,000 entrepreneurs building real income'],
-  },
-  'Digital Products': {
-    angle: 'courses, ebooks, software, templates, digital downloads with high profit margins',
-    audience: 'creators, educators, marketers selling or buying digital products',
-    hooks: ['Download this free $97 resource', 'The digital product that sells itself', 'How to create a digital product in 24 hours'],
-  },
-  'Self Improvement': {
-    angle: 'mindset, productivity, habits, success principles, personal development',
-    audience: 'ambitious people wanting to improve their life, career, relationships',
-    hooks: ['The habit that changed my life in 30 days', 'Why 97% of people never reach their potential', 'The morning routine of top performers'],
-  },
-  'Software & Tools': {
-    angle: 'automation, time-saving, productivity tools, SaaS solutions, ROI',
-    audience: 'business owners, marketers, entrepreneurs looking for tools to grow faster',
-    hooks: ['This tool saved me 10 hours per week', 'The software every marketer needs right now', 'Automate your business with this one tool'],
-  },
-  'E-commerce': {
-    angle: 'online stores, dropshipping, Amazon FBA, product selling, ecommerce profits',
-    audience: 'entrepreneurs wanting to sell products online, existing store owners',
-    hooks: ['This product made $10k in its first month', 'The ecommerce strategy nobody talks about', 'Start your store with zero inventory'],
-  },
-  'General': {
-    angle: 'online business, marketing, making money, building an audience',
-    audience: 'general online marketers and entrepreneurs',
-    hooks: ['The opportunity most people are missing', 'A simple system that actually works', 'Why now is the best time to start'],
-  },
-};
-
 const TONES = [
   { value: 'urgent',       label: 'Urgent',       emoji: '🔥', desc: 'Creates FOMO and time pressure' },
   { value: 'professional', label: 'Professional',  emoji: '💼', desc: 'Credible and authoritative' },
@@ -106,48 +53,23 @@ const EmailComposer = () => {
   const generateEmail = async () => {
     setIsGenerating(true);
     setAiError('');
-    const niche = NICHE_PROMPTS[selectedCategory] || NICHE_PROMPTS['General'];
-    const randomHook = niche.hooks[generationCount % niche.hooks.length];
-
-    const prompt = `You are an expert direct-response email copywriter specializing in affiliate marketing and online business.
-
-Write a high-converting promotional email for the "${selectedCategory}" niche.
-
-Niche details:
-- Core angle: ${niche.angle}
-- Target audience: ${niche.audience}
-- Hook inspiration: ${randomHook}
-- Tone: ${selectedTone}
-
-Requirements:
-- Generate 3 different subject line options (each under 60 characters, curiosity-driven, high open-rate)
-- Write one complete email body (150-200 words)
-- Email body must include: attention-grabbing opening, pain point identification, solution teaser, social proof hint, clear call-to-action with [YOUR LINK HERE] placeholder
-- End with a compelling P.S. line
-- Tone must be: ${selectedTone}
-- Do NOT use spammy words like FREE!!! or all caps
-- Make it feel personal and authentic
-
-Respond in this EXACT JSON format with no other text:
-{"subjects": ["subject 1", "subject 2", "subject 3"], "body": "full email body here with newlines as actual line breaks"}`;
-
     try {
-      const response = await fetch('https://api.anthropic.com/v1/messages', {
+      const response = await fetch('/.netlify/functions/generate-email', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514',
-          max_tokens: 1000,
-          messages: [{ role: 'user', content: prompt }],
+          category: selectedCategory,
+          tone: selectedTone,
+          generationCount,
         }),
       });
 
-      if (!response.ok) throw new Error('API error: ' + response.status);
+      if (!response.ok) {
+        const errData = await response.json().catch(() => ({}));
+        throw new Error(errData.error || 'Server error: ' + response.status);
+      }
 
-      const data = await response.json();
-      const text = data.content?.[0]?.text || '';
-      const clean = text.replace(/```json|```/g, '').trim();
-      const parsed = JSON.parse(clean);
+      const parsed = await response.json();
 
       if (parsed.subjects && parsed.body) {
         setSubjectVariations(parsed.subjects);
@@ -161,7 +83,7 @@ Respond in this EXACT JSON format with no other text:
         throw new Error('Invalid response format');
       }
     } catch (err) {
-      setAiError('Generation failed. Make sure REACT_APP_ANTHROPIC_API_KEY is set in your Netlify environment variables.');
+      setAiError('Generation failed: ' + err.message);
     }
     setIsGenerating(false);
   };
