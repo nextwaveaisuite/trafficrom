@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Zap, Shield, TrendingUp, Mail, Users, BarChart2, CheckCircle, ArrowRight, Star } from 'lucide-react';
+import { Zap, Shield, TrendingUp, Mail, Users, BarChart2, CheckCircle, ArrowRight, Star, Coins } from 'lucide-react';
 import Header from '../components/Layout/Header';
 import Footer from '../components/Layout/Footer';
 import { MEMBERSHIP_TIERS } from '../utils/constants';
