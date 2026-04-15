@@ -6,36 +6,34 @@ import AdminRoute from './components/Admin/AdminRoute';
 import Sidebar from './components/Layout/Sidebar';
 import AdminSidebar from './components/Admin/AdminSidebar';
 
-// Lazy load all pages — only loads when user navigates there
 const Home        = lazy(() => import('./pages/Home'));
 const Pricing     = lazy(() => import('./pages/Pricing'));
 const Features    = lazy(() => import('./pages/Features'));
 const Login       = lazy(() => import('./components/Auth/Login'));
 const Register    = lazy(() => import('./components/Auth/Register'));
 
-const Dashboard        = lazy(() => import('./components/Dashboard/Dashboard'));
-const BannerAds    = lazy(() => import('./components/Dashboard/BannerAds'));
-const Leaderboard  = lazy(() => import('./components/Dashboard/Leaderboard'));
-const Referrals    = lazy(() => import('./components/Dashboard/Referrals'));
-const Analytics    = lazy(() => import('./components/Dashboard/Analytics'));
+const Dashboard       = lazy(() => import('./components/Dashboard/Dashboard'));
+const BannerAds       = lazy(() => import('./components/Dashboard/BannerAds'));
+const Leaderboard     = lazy(() => import('./components/Dashboard/Leaderboard'));
+const Referrals       = lazy(() => import('./components/Dashboard/Referrals'));
+const Analytics       = lazy(() => import('./components/Dashboard/Analytics'));
 const AccountSettings = lazy(() => import('./components/Dashboard/AccountSettings'));
-const EmailComposer    = lazy(() => import('./components/Dashboard/EmailComposer'));
-const EmailInbox       = lazy(() => import('./components/Dashboard/EmailInbox'));
-const CampaignHistory  = lazy(() => import('./components/Dashboard/CampaignHistory'));
-const CreditManager    = lazy(() => import('./components/Dashboard/CreditManager'));
+const EmailComposer   = lazy(() => import('./components/Dashboard/EmailComposer'));
+const EmailInbox      = lazy(() => import('./components/Dashboard/EmailInbox'));
+const CampaignHistory = lazy(() => import('./components/Dashboard/CampaignHistory'));
+const CreditManager   = lazy(() => import('./components/Dashboard/CreditManager'));
 
-const AdminLogin      = lazy(() => import('./pages/Admin/AdminLogin'));
-const AdminOverview   = lazy(() => import('./pages/Admin/AdminOverview'));
-const AdminMembers    = lazy(() => import('./pages/Admin/AdminMembers'));
-const AdminCampaigns  = lazy(() => import('./pages/Admin/AdminCampaigns'));
+const AdminLogin         = lazy(() => import('./pages/Admin/AdminLogin'));
+const AdminOverview      = lazy(() => import('./pages/Admin/AdminOverview'));
+const AdminMembers       = lazy(() => import('./pages/Admin/AdminMembers'));
+const AdminCampaigns     = lazy(() => import('./pages/Admin/AdminCampaigns'));
 const AdminPromoCodes    = lazy(() => import('./pages/Admin/AdminPromoCodes'));
 const AdminPromoSchedule = lazy(() => import('./pages/Admin/AdminPromoSchedule'));
 const AdminBanners       = lazy(() => import('./pages/Admin/AdminBanners'));
-const AdminLeaderboard = lazy(() => import('./pages/Admin/AdminLeaderboard'));
-const AdminSettings   = lazy(() => import('./pages/Admin/AdminSettings'));
-const AdminPlaceholder = lazy(() => import('./pages/Admin/AdminPlaceholder'));
+const AdminLeaderboard   = lazy(() => import('./pages/Admin/AdminLeaderboard'));
+const AdminSettings      = lazy(() => import('./pages/Admin/AdminSettings'));
+const AdminPlaceholder   = lazy(() => import('./pages/Admin/AdminPlaceholder'));
 
-// Page loader
 const PageLoader = () => (
   <div style={{ minHeight: '100vh', background: '#0a0e1a', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 }}>
@@ -57,15 +55,6 @@ const AdminLayout = ({ children }) => (
   <div className="flex" style={{ minHeight: '100vh', background: '#0a0e1a' }}>
     <AdminSidebar />
     <main className="flex-1 overflow-auto">{children}</main>
-  </div>
-);
-
-const ComingSoon = ({ title }) => (
-  <div className="p-6 max-w-2xl mx-auto">
-    <div className="card p-10 text-center">
-      <p className="text-2xl font-bold mb-2" style={{ fontFamily: 'Syne', color: 'var(--text-primary)' }}>{title}</p>
-      <p style={{ color: 'var(--text-muted)' }}>This section is coming soon!</p>
-    </div>
   </div>
 );
 
