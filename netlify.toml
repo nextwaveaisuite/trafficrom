@@ -1,0 +1,28 @@
+[build]
+  publish = "build"
+  command = "npm run build"
+
+[functions]
+  directory = "netlify/functions"
+
+# Auto-promo runs daily at 9am UTC — checks schedules and generates codes when due
+[[plugins]]
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[build.environment]
+  NODE_VERSION = "18"
+
+[functions."auto-promo"]
+  schedule = "0 9 * * *"
+
+# Daily reset at midnight UTC
+[functions.scheduled-daily]
+  schedule = "0 0 * * *"
+
+# Monthly prizes on 1st of month at 00:05 UTC
+[functions.scheduled-monthly]
+  schedule = "5 0 1 * *"
