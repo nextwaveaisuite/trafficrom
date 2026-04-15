@@ -32,7 +32,7 @@ const BannerRotator = ({ size = 'leaderboard', className = '' }) => {
       });
     }, 8000);
     return () => clearInterval(interval);
-  }, [banners]);
+  }, [banners]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const trackImpression = async (bannerId) => {
     await supabase.rpc('record_impression', { p_banner_id: bannerId }).maybeSingle();
