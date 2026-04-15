@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Clock, Plus, Trash2, Play, Pause, RefreshCw, CheckCircle, Zap, Calendar } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
-import { timeAgo, formatDate } from '../../utils/helpers';
+import { timeAgo } from '../../utils/helpers';
 
 const FREQUENCIES = [
   { value: 'weekly',      label: 'Weekly',       desc: 'Every 7 days' },
@@ -92,10 +92,8 @@ const AdminPromoSchedule = () => {
     fetchSchedules();
   };
 
-  // Manually trigger code generation for a schedule right now
   const triggerNow = async (schedule) => {
     setTriggering(schedule.id);
-
     const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
     const prefixes = { general: 'ROM', banner_ads: 'BANNER', solo_ads: 'SOLO', email_sends: 'MAIL', bonus: 'BONUS' };
     const prefix = prefixes[schedule.credit_type] || 'ROM';
@@ -105,10 +103,8 @@ const AdminPromoSchedule = () => {
     const expiresAt = new Date(Date.now() + (schedule.expires_days || 30) * 24 * 60 * 60 * 1000);
     const monthLabel = new Date().toLocaleString('default', { month: 'long', year: 'numeric' });
 
-    // Deactivate previous auto codes for this schedule
     await supabase.from('promo_codes').update({ is_active: false }).eq('schedule_id', schedule.id).eq('is_active', true);
 
-    // Insert new code
     await supabase.from('promo_codes').insert({
       code: newCode,
       credits: schedule.credits,
@@ -121,7 +117,6 @@ const AdminPromoSchedule = () => {
       uses_count: 0,
     });
 
-    // Announce if enabled
     if (schedule.auto_announce) {
       await supabase.from('announcements').insert({
         title: `🎁 New Promo Code — ${monthLabel}!`,
@@ -133,7 +128,6 @@ const AdminPromoSchedule = () => {
       });
     }
 
-    // Update last_run
     await supabase.from('promo_schedules').update({ last_run_at: new Date().toISOString(), last_code: newCode }).eq('id', schedule.id);
 
     setMsg(`✓ Code generated: ${newCode} (${schedule.credits} credits)${schedule.auto_announce ? ' — announced to members' : ''}`);
@@ -176,12 +170,11 @@ const AdminPromoSchedule = () => {
         </div>
       </div>
 
-      {/* How it works */}
       <div className="grid grid-cols-3 gap-3 my-5">
         {[
-          { icon: Calendar, label: 'You set a schedule', desc: 'Choose weekly, fortnightly or monthly' },
-          { icon: Zap,      label: 'Auto-generates code', desc: 'New code created at 9am UTC each cycle' },
-          { icon: CheckCircle, label: 'Members notified', desc: 'Announcement posted in member dashboard' },
+          { icon: Calendar,     label: 'You set a schedule',    desc: 'Choose weekly, fortnightly or monthly' },
+          { icon: Zap,          label: 'Auto-generates code',   desc: 'New code created at 9am UTC each cycle' },
+          { icon: CheckCircle,  label: 'Members notified',      desc: 'Announcement posted in member dashboard' },
         ].map(({ icon: Icon, label, desc }) => (
           <div key={label} className="p-3 rounded-xl text-center" style={{ background: '#0f1525', border: '1px solid rgba(251,191,36,0.2)' }}>
             <Icon size={18} className="mx-auto mb-1" style={{ color: '#fbbf24' }} />
@@ -197,7 +190,6 @@ const AdminPromoSchedule = () => {
         </div>
       )}
 
-      {/* Create form */}
       {showForm && (
         <div className="rounded-xl p-5 mb-6" style={{ background: '#0f1525', border: '1px solid rgba(251,191,36,0.3)' }}>
           <h2 className="font-bold mb-4 flex items-center gap-2 text-sm" style={{ fontFamily: 'Syne', color: '#f0f4ff' }}>
@@ -239,11 +231,10 @@ const AdminPromoSchedule = () => {
               </div>
             </div>
 
-            {/* Toggles */}
             <div className="flex gap-4">
               {[
                 { key: 'auto_announce', label: 'Auto-announce to members', desc: 'Posts announcement in member dashboard' },
-                { key: 'is_active',     label: 'Active immediately',        desc: 'Start generating on next scheduled run' },
+                { key: 'is_active',     label: 'Active immediately',       desc: 'Start generating on next scheduled run' },
               ].map(({ key, label, desc }) => (
                 <div key={key} className="flex items-center gap-3 p-3 rounded-lg flex-1" style={{ background: '#151d30', border: '1px solid #1e2840' }}>
                   <div>
@@ -263,7 +254,10 @@ const AdminPromoSchedule = () => {
               <button type="submit" disabled={saving}
                 className="px-5 py-2 rounded-lg font-bold text-sm flex items-center gap-2 disabled:opacity-50"
                 style={{ background: '#fbbf24', color: '#0a0e1a', fontFamily: 'Syne' }}>
-                {saving ? <div className="w-4 h-4 rounded-full border-2 animate-spin" style={{ borderColor: '#0a0e1a', borderTopColor: 'transparent' }} /> : <><Clock size={14} /> Save Schedule</>}
+                {saving
+                  ? <div className="w-4 h-4 rounded-full border-2 animate-spin" style={{ borderColor: '#0a0e1a', borderTopColor: 'transparent' }} />
+                  : <><Clock size={14} /> Save Schedule</>
+                }
               </button>
               <button type="button" onClick={() => setShowForm(false)}
                 className="px-5 py-2 rounded-lg text-sm" style={{ border: '1px solid #1e2840', color: '#8899bb' }}>
@@ -274,7 +268,6 @@ const AdminPromoSchedule = () => {
         </div>
       )}
 
-      {/* Schedules list */}
       <div className="space-y-3">
         {loading ? (
           <div className="p-10 text-center" style={{ color: '#8899bb' }}>Loading schedules...</div>
@@ -292,7 +285,8 @@ const AdminPromoSchedule = () => {
           const type = typeInfo(schedule.credit_type);
           const freq = FREQUENCIES.find(f => f.value === schedule.frequency);
           return (
-            <div key={schedule.id} className="rounded-xl p-5" style={{ background: '#0f1525', border: '1px solid ' + (schedule.is_active ? 'rgba(251,191,36,0.25)' : '#1e2840'), opacity: schedule.is_active ? 1 : 0.6 }}>
+            <div key={schedule.id} className="rounded-xl p-5"
+              style={{ background: '#0f1525', border: '1px solid ' + (schedule.is_active ? 'rgba(251,191,36,0.25)' : '#1e2840'), opacity: schedule.is_active ? 1 : 0.6 }}>
               <div className="flex items-start justify-between gap-4">
                 <div className="flex items-start gap-3">
                   <div className="w-10 h-10 rounded-xl flex items-center justify-center text-lg shrink-0" style={{ background: 'rgba(251,191,36,0.1)' }}>
@@ -301,9 +295,7 @@ const AdminPromoSchedule = () => {
                   <div>
                     <div className="flex items-center gap-2 flex-wrap mb-1">
                       <p className="font-bold text-sm" style={{ fontFamily: 'Syne', color: '#f0f4ff' }}>{schedule.label || `${freq?.label} ${type.label}`}</p>
-                      <span className="text-xs px-2 py-0.5 rounded-full font-bold" style={{ background: freqColor(schedule.frequency) + '18', color: freqColor(schedule.frequency) }}>
-                        {freq?.label}
-                      </span>
+                      <span className="text-xs px-2 py-0.5 rounded-full font-bold" style={{ background: freqColor(schedule.frequency) + '18', color: freqColor(schedule.frequency) }}>{freq?.label}</span>
                       <span className="text-xs px-2 py-0.5 rounded-full font-bold" style={{ background: schedule.is_active ? 'rgba(0,212,120,0.1)' : 'rgba(239,68,68,0.1)', color: schedule.is_active ? '#00d478' : '#f87171' }}>
                         {schedule.is_active ? '● Active' : '● Paused'}
                       </span>
@@ -321,30 +313,20 @@ const AdminPromoSchedule = () => {
                     </div>
                   </div>
                 </div>
-
                 <div className="flex items-center gap-2 shrink-0">
-                  {/* Trigger now */}
                   <button onClick={() => triggerNow(schedule)} disabled={triggering === schedule.id}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all disabled:opacity-50"
-                    style={{ background: 'rgba(251,191,36,0.15)', color: '#fbbf24', border: '1px solid rgba(251,191,36,0.3)' }}
-                    title="Generate a code right now">
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold disabled:opacity-50"
+                    style={{ background: 'rgba(251,191,36,0.15)', color: '#fbbf24', border: '1px solid rgba(251,191,36,0.3)' }}>
                     {triggering === schedule.id
                       ? <div className="w-3 h-3 rounded-full border-2 animate-spin" style={{ borderColor: '#fbbf24', borderTopColor: 'transparent' }} />
                       : <><Zap size={11} /> Now</>
                     }
                   </button>
-
-                  {/* Pause/Resume */}
-                  <button onClick={() => toggleSchedule(schedule)}
-                    className="p-1.5 rounded-lg transition-all"
-                    style={{ color: schedule.is_active ? '#fbbf24' : '#00d478', border: '1px solid #1e2840' }}
-                    title={schedule.is_active ? 'Pause schedule' : 'Resume schedule'}>
+                  <button onClick={() => toggleSchedule(schedule)} className="p-1.5 rounded-lg"
+                    style={{ color: schedule.is_active ? '#fbbf24' : '#00d478', border: '1px solid #1e2840' }}>
                     {schedule.is_active ? <Pause size={14} /> : <Play size={14} />}
                   </button>
-
-                  {/* Delete */}
-                  <button onClick={() => deleteSchedule(schedule.id)}
-                    className="p-1.5 rounded-lg" style={{ color: '#f87171' }} title="Delete schedule">
+                  <button onClick={() => deleteSchedule(schedule.id)} className="p-1.5 rounded-lg" style={{ color: '#f87171' }}>
                     <Trash2 size={14} />
                   </button>
                 </div>
@@ -354,26 +336,13 @@ const AdminPromoSchedule = () => {
         })}
       </div>
 
-      {/* Info */}
       <div className="mt-6 p-4 rounded-xl" style={{ background: '#0f1525', border: '1px solid #1e2840' }}>
         <p className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: '#8899bb' }}>⚙️ How the Autopilot Works</p>
         <div className="grid md:grid-cols-2 gap-3 text-xs" style={{ color: '#8899bb' }}>
-          <div>
-            <p className="font-semibold mb-0.5" style={{ color: '#f0f4ff' }}>Automatic daily check</p>
-            A background function runs every day at 9am UTC. It checks all active schedules and generates new codes when they are due.
-          </div>
-          <div>
-            <p className="font-semibold mb-0.5" style={{ color: '#f0f4ff' }}>Old codes deactivated</p>
-            When a new code is generated, the previous code for that schedule is automatically deactivated so only one is active at a time.
-          </div>
-          <div>
-            <p className="font-semibold mb-0.5" style={{ color: '#f0f4ff' }}>Generate Now button</p>
-            Use the ⚡ Now button to instantly generate a code outside the normal schedule — useful for special events or testing.
-          </div>
-          <div>
-            <p className="font-semibold mb-0.5" style={{ color: '#f0f4ff' }}>Member announcements</p>
-            With auto-announce enabled, members see a notification in their dashboard whenever a new code drops.
-          </div>
+          <div><p className="font-semibold mb-0.5" style={{ color: '#f0f4ff' }}>Automatic daily check</p>Runs every day at 9am UTC, checks all active schedules and generates new codes when due.</div>
+          <div><p className="font-semibold mb-0.5" style={{ color: '#f0f4ff' }}>Old codes deactivated</p>When a new code generates, the previous one for that schedule is automatically deactivated.</div>
+          <div><p className="font-semibold mb-0.5" style={{ color: '#f0f4ff' }}>Generate Now button</p>Use ⚡ Now to instantly generate a code outside the normal schedule for special events.</div>
+          <div><p className="font-semibold mb-0.5" style={{ color: '#f0f4ff' }}>Member announcements</p>With auto-announce on, members see a notification in their dashboard whenever a new code drops.</div>
         </div>
       </div>
     </div>
