@@ -1,10 +1,8 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
 
-// Rotates approved banners — shown on dashboard, inbox, etc.
 const BannerRotator = ({ size = 'leaderboard', className = '' }) => {
   const [banner, setBanner] = useState(null);
-  const [idx, setIdx] = useState(0);
   const [banners, setBanners] = useState([]);
 
   useEffect(() => {
@@ -18,21 +16,19 @@ const BannerRotator = ({ size = 'leaderboard', className = '' }) => {
         if (data && data.length > 0) {
           setBanners(data);
           setBanner(data[0]);
-          // Track impression
           trackImpression(data[0].id);
         }
       });
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Rotate every 8 seconds
   useEffect(() => {
     if (banners.length <= 1) return;
     const interval = setInterval(() => {
-      setIdx(prev => {
-        const next = (prev + 1) % banners.length;
-        setBanner(banners[next]);
-        trackImpression(banners[next].id);
-        return next;
+      setBanners(prev => {
+        const next = (prev.indexOf(banner) + 1) % prev.length;
+        setBanner(prev[next]);
+        trackImpression(prev[next].id);
+        return prev;
       });
     }, 8000);
     return () => clearInterval(interval);
@@ -51,10 +47,10 @@ const BannerRotator = ({ size = 'leaderboard', className = '' }) => {
   if (!banner) return null;
 
   const heights = {
-    leaderboard:  { h: 90,  w: '100%', maxW: 728 },
-    rectangle:    { h: 250, w: 300,    maxW: 300 },
-    skyscraper:   { h: 600, w: 160,    maxW: 160 },
-    bar:          { h: 60,  w: '100%', maxW: 468 },
+    leaderboard: { h: 90,  w: '100%', maxW: 728 },
+    rectangle:   { h: 250, w: 300,    maxW: 300 },
+    skyscraper:  { h: 600, w: 160,    maxW: 160 },
+    bar:         { h: 60,  w: '100%', maxW: 468 },
   };
   const dims = heights[size] || heights.bar;
 
