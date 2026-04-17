@@ -42,9 +42,9 @@ export const MEMBERSHIP_TIERS = {
 };
 
 export const CREDIT_PACKAGES = [
-  { id: 'credits_500',  credits: 500,  price: 5,  label: 'Starter Pack',  desc: 'Perfect for testing' },
-  { id: 'credits_2000', credits: 2000, price: 15, label: 'Growth Pack',   desc: 'Best value' },
-  { id: 'credits_5000', credits: 5000, price: 29, label: 'Power Pack',    desc: 'For serious mailers' },
+  { id: 'credits_500',  credits: 500,  price: 5,  label: 'Starter Pack', desc: 'Perfect for testing' },
+  { id: 'credits_2000', credits: 2000, price: 15, label: 'Growth Pack',  desc: 'Best value' },
+  { id: 'credits_5000', credits: 5000, price: 29, label: 'Power Pack',   desc: 'For serious mailers' },
 ];
 
 export const EMAIL_CATEGORIES = [
