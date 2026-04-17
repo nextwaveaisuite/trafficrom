@@ -24,7 +24,6 @@ const EmailComposer = () => {
   const { spendCredits } = useCredits();
   const navigate = useNavigate();
   const textareaRef = useRef(null);
-  const subjectRef = useRef(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
