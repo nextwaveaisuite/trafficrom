@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import {
-  Zap, Shield, TrendingUp, Mail, Users, BarChart2,
+  Zap, Shield, Mail, Users, BarChart2,
   CheckCircle, ArrowRight, Star, Coins, Link2, Image,
   Trophy, Sparkles, Clock, Tag, Bot
 } from 'lucide-react';
