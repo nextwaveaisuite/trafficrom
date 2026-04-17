@@ -6,22 +6,23 @@ import AdminRoute from './components/Admin/AdminRoute';
 import Sidebar from './components/Layout/Sidebar';
 import AdminSidebar from './components/Admin/AdminSidebar';
 
-const Home        = lazy(() => import('./pages/Home'));
-const Pricing     = lazy(() => import('./pages/Pricing'));
-const Features    = lazy(() => import('./pages/Features'));
-const Login       = lazy(() => import('./components/Auth/Login'));
-const Register    = lazy(() => import('./components/Auth/Register'));
+const FoundingMembers    = lazy(() => import('./pages/FoundingMembers'));
+const Home               = lazy(() => import('./pages/Home'));
+const Pricing            = lazy(() => import('./pages/Pricing'));
+const Features           = lazy(() => import('./pages/Features'));
+const Login              = lazy(() => import('./components/Auth/Login'));
+const Register           = lazy(() => import('./components/Auth/Register'));
 
-const Dashboard       = lazy(() => import('./components/Dashboard/Dashboard'));
-const BannerAds       = lazy(() => import('./components/Dashboard/BannerAds'));
-const Leaderboard     = lazy(() => import('./components/Dashboard/Leaderboard'));
-const Referrals       = lazy(() => import('./components/Dashboard/Referrals'));
-const Analytics       = lazy(() => import('./components/Dashboard/Analytics'));
-const AccountSettings = lazy(() => import('./components/Dashboard/AccountSettings'));
-const EmailComposer   = lazy(() => import('./components/Dashboard/EmailComposer'));
-const EmailInbox      = lazy(() => import('./components/Dashboard/EmailInbox'));
-const CampaignHistory = lazy(() => import('./components/Dashboard/CampaignHistory'));
-const CreditManager   = lazy(() => import('./components/Dashboard/CreditManager'));
+const Dashboard          = lazy(() => import('./components/Dashboard/Dashboard'));
+const BannerAds          = lazy(() => import('./components/Dashboard/BannerAds'));
+const Leaderboard        = lazy(() => import('./components/Dashboard/Leaderboard'));
+const Referrals          = lazy(() => import('./components/Dashboard/Referrals'));
+const Analytics          = lazy(() => import('./components/Dashboard/Analytics'));
+const AccountSettings    = lazy(() => import('./components/Dashboard/AccountSettings'));
+const EmailComposer      = lazy(() => import('./components/Dashboard/EmailComposer'));
+const EmailInbox         = lazy(() => import('./components/Dashboard/EmailInbox'));
+const CampaignHistory    = lazy(() => import('./components/Dashboard/CampaignHistory'));
+const CreditManager      = lazy(() => import('./components/Dashboard/CreditManager'));
 
 const AdminLogin         = lazy(() => import('./pages/Admin/AdminLogin'));
 const AdminOverview      = lazy(() => import('./pages/Admin/AdminOverview'));
@@ -65,11 +66,12 @@ function App() {
         <Suspense fallback={<PageLoader />}>
           <Routes>
             {/* Public */}
-            <Route path="/"         element={<Home />} />
-            <Route path="/pricing"  element={<Pricing />} />
-            <Route path="/features" element={<Features />} />
-            <Route path="/login"    element={<Login />} />
-            <Route path="/register" element={<Register />} />
+            <Route path="/"                 element={<Home />} />
+            <Route path="/founding-members" element={<FoundingMembers />} />
+            <Route path="/pricing"          element={<Pricing />} />
+            <Route path="/features"         element={<Features />} />
+            <Route path="/login"            element={<Login />} />
+            <Route path="/register"         element={<Register />} />
 
             {/* Member Dashboard */}
             <Route path="/dashboard" element={
