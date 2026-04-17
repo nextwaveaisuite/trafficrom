@@ -6,7 +6,11 @@ const supabase = createClient(
 );
 
 exports.handler = async (event) => {
-  const slug = event.path.replace('/go/', '').replace(/^\/+|\/+$/g, '');
+  // Handle both /go/slug and /.netlify/functions/go/slug path formats
+  const path = event.path || '';
+  const slug = path.split('/go/').pop().replace(/^\/+|\/+$/g, '');
+
+  console.log('Go function hit — path:', path, '— slug:', slug);
 
   if (!slug) {
     return { statusCode: 302, headers: { Location: '/' } };
@@ -21,24 +25,31 @@ exports.handler = async (event) => {
       .single();
 
     if (error || !link) {
+      console.log('Link not found for slug:', slug, error);
       return {
         statusCode: 302,
         headers: { Location: '/?ref=invalid-link' },
       };
     }
 
-    // Track the click
-    supabase.from('cloaked_links')
-      .update({ clicks: (link.clicks || 0) + 1, last_clicked_at: new Date().toISOString() })
-      .eq('id', link.id)
-      .then(() => {});
+    // AWAIT the click tracking BEFORE returning — serverless functions
+    // terminate after response so fire-and-forget doesn't work
+    await supabase
+      .from('cloaked_links')
+      .update({
+        clicks: (link.clicks || 0) + 1,
+        last_clicked_at: new Date().toISOString()
+      })
+      .eq('id', link.id);
 
-    supabase.from('link_clicks').insert({
+    await supabase.from('link_clicks').insert({
       link_id: link.id,
       clicked_at: new Date().toISOString(),
       referrer: event.headers?.referer || null,
       user_agent: event.headers?.['user-agent'] || null,
-    }).then(() => {});
+    });
+
+    console.log('Click tracked for slug:', slug, '— redirecting to:', link.destination_url);
 
     return {
       statusCode: 302,
