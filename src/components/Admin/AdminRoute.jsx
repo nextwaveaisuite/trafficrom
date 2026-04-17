@@ -1,10 +1,36 @@
+import { useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
-import { useAuth } from '../../hooks/useAuth';
+import { supabase } from '../../lib/supabase';
 
 const AdminRoute = ({ children }) => {
-  const { user, profile, loading } = useAuth();
+  const [status, setStatus] = useState('checking');
 
-  if (loading) {
+  useEffect(() => {
+    const check = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+
+      if (!session?.user) {
+        setStatus('denied');
+        return;
+      }
+
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('is_admin, is_owner')
+        .eq('id', session.user.id)
+        .single();
+
+      if (profile?.is_admin || profile?.is_owner) {
+        setStatus('allowed');
+      } else {
+        setStatus('denied');
+      }
+    };
+
+    check();
+  }, []);
+
+  if (status === 'checking') {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{ background: '#0a0e1a' }}>
         <div className="flex flex-col items-center gap-4">
@@ -15,8 +41,7 @@ const AdminRoute = ({ children }) => {
     );
   }
 
-  if (!user) return <Navigate to="/admin/login" replace />;
-  if (!profile?.is_admin) return <Navigate to="/admin/login" replace />;
+  if (status === 'denied') return <Navigate to="/admin/login" replace />;
 
   return children;
 };
