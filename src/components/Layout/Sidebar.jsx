@@ -1,21 +1,22 @@
 import { NavLink, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard, Send, Clock, Coins, Users, BarChart2,
-  Settings, LogOut, Zap, ChevronRight, Inbox, Image, Trophy
+  Settings, LogOut, Zap, ChevronRight, Inbox, Image, Trophy, Link2
 } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 
 const navItems = [
-  { to: '/dashboard',          icon: LayoutDashboard, label: 'Dashboard' },
-  { to: '/dashboard/compose',  icon: Send,            label: 'Send Email' },
-  { to: '/dashboard/inbox',    icon: Inbox,           label: 'Read & Earn' },
-  { to: '/dashboard/history',  icon: Clock,           label: 'Campaigns' },
-  { to: '/dashboard/credits',  icon: Coins,           label: 'Credits' },
-  { to: '/dashboard/banners',    icon: Image,           label: 'Banner Ads'    },
-  { to: '/dashboard/leaderboard',icon: Trophy,          label: 'Leaderboard'   },
-  { to: '/dashboard/referrals',  icon: Users,           label: 'Referrals'     },
-  { to: '/dashboard/analytics',icon: BarChart2,       label: 'Analytics' },
-  { to: '/dashboard/settings', icon: Settings,        label: 'Settings' },
+  { to: '/dashboard',           icon: LayoutDashboard, label: 'Dashboard'    },
+  { to: '/dashboard/compose',   icon: Send,            label: 'Send Email'   },
+  { to: '/dashboard/inbox',     icon: Inbox,           label: 'Read & Earn'  },
+  { to: '/dashboard/history',   icon: Clock,           label: 'Campaigns'    },
+  { to: '/dashboard/credits',   icon: Coins,           label: 'Credits'      },
+  { to: '/dashboard/links',     icon: Link2,           label: 'Link Cloaker' },
+  { to: '/dashboard/banners',   icon: Image,           label: 'Banner Ads'   },
+  { to: '/dashboard/leaderboard',icon: Trophy,         label: 'Leaderboard'  },
+  { to: '/dashboard/referrals', icon: Users,           label: 'Referrals'    },
+  { to: '/dashboard/analytics', icon: BarChart2,       label: 'Analytics'    },
+  { to: '/dashboard/settings',  icon: Settings,        label: 'Settings'     },
 ];
 
 const Sidebar = () => {
@@ -60,18 +61,9 @@ const Sidebar = () => {
       {/* Nav */}
       <nav className="flex-1 px-3 mt-4 space-y-1">
         {navItems.map(({ to, icon: Icon, label }) => (
-          <NavLink
-            key={to}
-            to={to}
-            end={to === '/dashboard'}
-            className={({ isActive }) =>
-              `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all ${isActive ? 'active-nav' : ''}`
-            }
-            style={({ isActive }) => ({
-              color: isActive ? 'var(--brand-green)' : 'var(--text-muted)',
-              background: isActive ? 'rgba(0,212,120,0.1)' : 'transparent',
-            })}
-          >
+          <NavLink key={to} to={to} end={to === '/dashboard'}
+            className={({ isActive }) => `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all ${isActive ? 'active-nav' : ''}`}
+            style={({ isActive }) => ({ color: isActive ? 'var(--brand-green)' : 'var(--text-muted)', background: isActive ? 'rgba(0,212,120,0.1)' : 'transparent' })}>
             <Icon size={16} />
             {label}
           </NavLink>
