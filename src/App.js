@@ -15,6 +15,7 @@ const Register           = lazy(() => import('./components/Auth/Register'));
 
 const Dashboard          = lazy(() => import('./components/Dashboard/Dashboard'));
 const BannerAds          = lazy(() => import('./components/Dashboard/BannerAds'));
+const LinkCloaker        = lazy(() => import('./components/Dashboard/LinkCloaker'));
 const Leaderboard        = lazy(() => import('./components/Dashboard/Leaderboard'));
 const Referrals          = lazy(() => import('./components/Dashboard/Referrals'));
 const Analytics          = lazy(() => import('./components/Dashboard/Analytics'));
@@ -91,6 +92,9 @@ function App() {
             } />
             <Route path="/dashboard/banners" element={
               <ProtectedRoute><DashboardLayout><BannerAds /></DashboardLayout></ProtectedRoute>
+            } />
+            <Route path="/dashboard/links" element={
+              <ProtectedRoute><DashboardLayout><LinkCloaker /></DashboardLayout></ProtectedRoute>
             } />
             <Route path="/dashboard/leaderboard" element={
               <ProtectedRoute><DashboardLayout><Leaderboard /></DashboardLayout></ProtectedRoute>
