@@ -17,18 +17,27 @@ const AdminLogin = () => {
   const onLogin = async (data) => {
     setIsLoading(true);
     setServerError('');
+
+    // Clear ALL cached profile data first
+    localStorage.removeItem('trafficrom_profile');
+    localStorage.removeItem('trafficrom_session');
+    localStorage.clear();
+
     const { data: authData, error } = await signIn({ email: data.email, password: data.password });
     if (error) {
       setServerError('Invalid email or password.');
       setIsLoading(false);
       return;
     }
-    const { data: profile } = await supabase
+
+    // Force fresh check directly from database — bypass all caching
+    const { data: profile, error: profileError } = await supabase
       .from('profiles')
-      .select('is_admin')
+      .select('is_admin, is_owner')
       .eq('id', authData.user.id)
       .single();
-    if (!profile?.is_admin) {
+
+    if (profileError || (!profile?.is_admin && !profile?.is_owner)) {
       await supabase.auth.signOut();
       setServerError('Access denied. This account does not have admin privileges.');
       setIsLoading(false);
@@ -97,7 +106,6 @@ const AdminLogin = () => {
 
         <div className="p-8 rounded-xl" style={{ background: '#0f1525', border: '1px solid #1e2840' }}>
 
-          {/* Account Created */}
           {tab === 'created' && (
             <div className="text-center">
               <div className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4" style={{ background: 'rgba(0,212,120,0.15)' }}>
@@ -128,7 +136,6 @@ const AdminLogin = () => {
             </div>
           )}
 
-          {/* Login */}
           {tab === 'login' && (
             <>
               {serverError && (
@@ -170,7 +177,6 @@ const AdminLogin = () => {
             </>
           )}
 
-          {/* Register */}
           {tab === 'register' && (
             <>
               {serverError && (
