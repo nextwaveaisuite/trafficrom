@@ -2,11 +2,9 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { Shield, Mail, Lock, Eye, EyeOff, User, UserPlus, LogIn } from 'lucide-react';
-import { useAuth } from '../../hooks/useAuth';
 import { supabase } from '../../lib/supabase';
 
 const AdminLogin = () => {
-  const { signIn, signUp } = useAuth();
   const navigate = useNavigate();
   const [tab, setTab] = useState('login');
   const [showPass, setShowPass] = useState(false);
@@ -18,43 +16,58 @@ const AdminLogin = () => {
     setIsLoading(true);
     setServerError('');
 
-    // Clear ALL cached profile data first
-    localStorage.removeItem('trafficrom_profile');
-    localStorage.removeItem('trafficrom_session');
-    localStorage.clear();
+    // Hard clear ALL cache
+    try { localStorage.clear(); } catch(e) {}
+    try { sessionStorage.clear(); } catch(e) {}
 
-    const { data: authData, error } = await signIn({ email: data.email, password: data.password });
+    // Sign in directly via Supabase — no hooks, no cache
+    const { data: authData, error } = await supabase.auth.signInWithPassword({
+      email: data.email,
+      password: data.password,
+    });
+
     if (error) {
       setServerError('Invalid email or password.');
       setIsLoading(false);
       return;
     }
 
-    // Force fresh check directly from database — bypass all caching
+    // Force fresh profile fetch directly from DB
     const { data: profile, error: profileError } = await supabase
       .from('profiles')
       .select('is_admin, is_owner')
       .eq('id', authData.user.id)
       .single();
 
-    if (profileError || (!profile?.is_admin && !profile?.is_owner)) {
+    if (profileError) {
+      setServerError('Could not load profile. Please try again.');
+      setIsLoading(false);
+      return;
+    }
+
+    if (!profile?.is_admin && !profile?.is_owner) {
       await supabase.auth.signOut();
       setServerError('Access denied. This account does not have admin privileges.');
       setIsLoading(false);
       return;
     }
+
     navigate('/admin');
   };
 
   const onRegister = async (data) => {
     setIsLoading(true);
     setServerError('');
-    const { error } = await signUp({
+    const { error } = await supabase.auth.signUp({
       email: data.email,
       password: data.password,
-      username: data.username,
-      firstName: data.firstName,
-      lastName: data.lastName,
+      options: {
+        data: {
+          username: data.username,
+          first_name: data.firstName,
+          last_name: data.lastName,
+        }
+      }
     });
     if (error) {
       setServerError(error.message);
@@ -80,7 +93,7 @@ const AdminLogin = () => {
     <div className="min-h-screen flex items-center justify-center px-4 relative overflow-hidden" style={{ background: '#0a0e1a' }}>
       <div className="absolute top-[-200px] left-1/2 -translate-x-1/2 w-[500px] h-[500px] rounded-full opacity-10 blur-[120px]" style={{ background: '#e11d48' }} />
 
-      <div className="w-full max-w-md animate-slide-up relative z-10">
+      <div className="w-full max-w-md relative z-10">
         <div className="text-center mb-8">
           <div className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-4" style={{ background: 'rgba(225,29,72,0.15)', border: '1px solid rgba(225,29,72,0.3)' }}>
             <Shield size={26} style={{ color: '#e11d48' }} />
@@ -106,6 +119,7 @@ const AdminLogin = () => {
 
         <div className="p-8 rounded-xl" style={{ background: '#0f1525', border: '1px solid #1e2840' }}>
 
+          {/* Account Created */}
           {tab === 'created' && (
             <div className="text-center">
               <div className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4" style={{ background: 'rgba(0,212,120,0.15)' }}>
@@ -136,6 +150,7 @@ const AdminLogin = () => {
             </div>
           )}
 
+          {/* Login */}
           {tab === 'login' && (
             <>
               {serverError && (
@@ -177,6 +192,7 @@ const AdminLogin = () => {
             </>
           )}
 
+          {/* Register */}
           {tab === 'register' && (
             <>
               {serverError && (
