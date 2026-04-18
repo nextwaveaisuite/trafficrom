@@ -4,6 +4,7 @@ import { lazy, Suspense } from 'react';
 import ProtectedRoute from './components/Auth/ProtectedRoute';
 import AdminRoute from './components/Admin/AdminRoute';
 import Sidebar from './components/Layout/Sidebar';
+import MobileSidebar from './components/Layout/MobileSidebar';
 import AdminSidebar from './components/Admin/AdminSidebar';
 
 const FoundingMembers    = lazy(() => import('./pages/FoundingMembers'));
@@ -36,6 +37,10 @@ const AdminPromoSchedule = lazy(() => import('./pages/Admin/AdminPromoSchedule')
 const AdminBanners       = lazy(() => import('./pages/Admin/AdminBanners'));
 const AdminLeaderboard   = lazy(() => import('./pages/Admin/AdminLeaderboard'));
 const AdminSettings      = lazy(() => import('./pages/Admin/AdminSettings'));
+const AdminRevenue       = lazy(() => import('./pages/Admin/AdminRevenue'));
+const AdminAnalytics     = lazy(() => import('./pages/Admin/AdminAnalytics'));
+const AdminReports       = lazy(() => import('./pages/Admin/AdminReports'));
+const AdminBroadcasts    = lazy(() => import('./pages/Admin/AdminBroadcasts'));
 const AdminPlaceholder   = lazy(() => import('./pages/Admin/AdminPlaceholder'));
 
 const PageLoader = () => (
@@ -49,9 +54,12 @@ const PageLoader = () => (
 );
 
 const DashboardLayout = ({ children }) => (
-  <div className="flex" style={{ minHeight: '100vh', background: 'var(--bg-primary)' }}>
-    <Sidebar />
-    <main className="flex-1 overflow-auto">{children}</main>
+  <div style={{ minHeight: '100vh', background: 'var(--bg-primary)' }}>
+    <MobileSidebar />
+    <div className="flex">
+      <Sidebar />
+      <main className="flex-1 overflow-auto">{children}</main>
+    </div>
   </div>
 );
 
@@ -69,13 +77,13 @@ function App() {
         <Suspense fallback={<PageLoader />}>
           <Routes>
             {/* Public */}
-            <Route path="/"                  element={<Home />} />
-            <Route path="/nextwaveaisuite"   element={<NextWaveHub />} />
-            <Route path="/founding-members"  element={<FoundingMembers />} />
-            <Route path="/pricing"           element={<Pricing />} />
-            <Route path="/features"          element={<Features />} />
-            <Route path="/login"             element={<Login />} />
-            <Route path="/register"          element={<Register />} />
+            <Route path="/"                 element={<Home />} />
+            <Route path="/nextwaveaisuite"  element={<NextWaveHub />} />
+            <Route path="/founding-members" element={<FoundingMembers />} />
+            <Route path="/pricing"          element={<Pricing />} />
+            <Route path="/features"         element={<Features />} />
+            <Route path="/login"            element={<Login />} />
+            <Route path="/register"         element={<Register />} />
 
             {/* Member Dashboard */}
             <Route path="/dashboard" element={
@@ -142,16 +150,16 @@ function App() {
               <AdminRoute><AdminLayout><AdminLeaderboard /></AdminLayout></AdminRoute>
             } />
             <Route path="/admin/revenue" element={
-              <AdminRoute><AdminLayout><AdminPlaceholder title="Revenue & Payments" /></AdminLayout></AdminRoute>
+              <AdminRoute><AdminLayout><AdminRevenue /></AdminLayout></AdminRoute>
             } />
             <Route path="/admin/analytics" element={
-              <AdminRoute><AdminLayout><AdminPlaceholder title="Platform Analytics" /></AdminLayout></AdminRoute>
+              <AdminRoute><AdminLayout><AdminAnalytics /></AdminLayout></AdminRoute>
             } />
             <Route path="/admin/reports" element={
-              <AdminRoute><AdminLayout><AdminPlaceholder title="Reports & Flags" /></AdminLayout></AdminRoute>
+              <AdminRoute><AdminLayout><AdminReports /></AdminLayout></AdminRoute>
             } />
             <Route path="/admin/broadcasts" element={
-              <AdminRoute><AdminLayout><AdminPlaceholder title="Member Broadcasts" /></AdminLayout></AdminRoute>
+              <AdminRoute><AdminLayout><AdminBroadcasts /></AdminLayout></AdminRoute>
             } />
             <Route path="/admin/settings" element={
               <AdminRoute><AdminLayout><AdminSettings /></AdminLayout></AdminRoute>
