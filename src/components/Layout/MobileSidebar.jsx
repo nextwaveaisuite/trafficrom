@@ -1,0 +1,125 @@
+import { useState } from 'react';
+import { NavLink, useNavigate } from 'react-router-dom';
+import {
+  LayoutDashboard, Send, Clock, Coins, Users, BarChart2,
+  Settings, LogOut, Zap, ChevronRight, Inbox, Image,
+  Trophy, Link2, Globe, Menu, X
+} from 'lucide-react';
+import { useAuth } from '../../hooks/useAuth';
+
+const navItems = [
+  { to: '/dashboard',            icon: LayoutDashboard, label: 'Dashboard'        },
+  { to: '/dashboard/compose',    icon: Send,            label: 'Send Email'       },
+  { to: '/dashboard/inbox',      icon: Inbox,           label: 'Read & Earn'      },
+  { to: '/dashboard/history',    icon: Clock,           label: 'Campaigns'        },
+  { to: '/dashboard/credits',    icon: Coins,           label: 'Credits'          },
+  { to: '/dashboard/links',      icon: Link2,           label: 'Link Cloaker'     },
+  { to: '/dashboard/downline',   icon: Globe,           label: 'Downline Builder' },
+  { to: '/dashboard/banners',    icon: Image,           label: 'Banner Ads'       },
+  { to: '/dashboard/leaderboard',icon: Trophy,          label: 'Leaderboard'      },
+  { to: '/dashboard/referrals',  icon: Users,           label: 'Referrals'        },
+  { to: '/dashboard/analytics',  icon: BarChart2,       label: 'Analytics'        },
+  { to: '/dashboard/settings',   icon: Settings,        label: 'Settings'         },
+];
+
+const MobileSidebar = () => {
+  const { profile, signOut } = useAuth();
+  const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
+  const tier = profile?.membership_tier || 'free';
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate('/');
+  };
+
+  return (
+    <>
+      <div className="md:hidden flex items-center justify-between px-4 h-14 sticky top-0 z-40"
+        style={{ background: 'var(--bg-secondary)', borderBottom: '1px solid var(--border)' }}>
+        <div className="flex items-center gap-2">
+          <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: 'var(--brand-green)' }}>
+            <Zap size={13} color="#0a0e1a" fill="#0a0e1a" />
+          </div>
+          <span className="font-bold text-sm" style={{ fontFamily: 'Syne', color: 'var(--text-primary)' }}>Traffic ROM</span>
+        </div>
+        <button onClick={() => setOpen(true)} className="p-2 rounded-lg" style={{ color: 'var(--text-muted)', border: '1px solid var(--border)' }}>
+          <Menu size={18} />
+        </button>
+      </div>
+
+      {open && (
+        <div className="md:hidden fixed inset-0 z-50 flex">
+          <div className="absolute inset-0 bg-black opacity-60" onClick={() => setOpen(false)} />
+          <div className="relative w-72 flex flex-col h-full z-10"
+            style={{ background: 'var(--bg-secondary)', borderRight: '1px solid var(--border)' }}>
+            <div className="flex items-center justify-between px-5 h-16" style={{ borderBottom: '1px solid var(--border)' }}>
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: 'var(--brand-green)' }}>
+                  <Zap size={16} color="#0a0e1a" fill="#0a0e1a" />
+                </div>
+                <span className="font-bold text-base" style={{ fontFamily: 'Syne', color: 'var(--text-primary)' }}>Traffic ROM</span>
+              </div>
+              <button onClick={() => setOpen(false)} style={{ color: 'var(--text-muted)' }}>
+                <X size={20} />
+              </button>
+            </div>
+
+            {profile && (
+              <div className="mx-3 mt-4 p-3 rounded-lg" style={{ background: 'var(--bg-card)', border: '1px solid var(--border)' }}>
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold" style={{ background: 'var(--brand-green)', color: '#0a0e1a' }}>
+                    {(profile.first_name?.[0] || profile.username?.[0] || '?').toUpperCase()}
+                  </div>
+                  <div className="overflow-hidden">
+                    <div className="flex items-center gap-1.5">
+                      <p className="text-sm font-semibold truncate" style={{ color: 'var(--text-primary)' }}>{profile.first_name} {profile.last_name}</p>
+                      {profile.is_owner && (
+                        <span className="text-xs px-1.5 py-0.5 rounded font-bold shrink-0" style={{ background: 'linear-gradient(135deg, #fbbf24, #f59e0b)', color: '#0a0e1a', fontSize: 9 }}>OWNER</span>
+                      )}
+                    </div>
+                    <p className="text-xs truncate" style={{ color: 'var(--text-muted)' }}>@{profile.username}</p>
+                  </div>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-xs px-2 py-0.5 rounded-full font-semibold uppercase" style={{ background: 'rgba(0,212,120,0.15)', color: 'var(--brand-green)' }}>{tier}</span>
+                  <span className="text-xs font-semibold" style={{ color: 'var(--brand-green)' }}>{profile.credits?.toLocaleString()} credits</span>
+                </div>
+              </div>
+            )}
+
+            <nav className="flex-1 px-3 mt-4 space-y-1 overflow-y-auto">
+              {navItems.map(({ to, icon: Icon, label }) => (
+                <NavLink key={to} to={to} end={to === '/dashboard'}
+                  onClick={() => setOpen(false)}
+                  className={({ isActive }) => `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all ${isActive ? 'active-nav' : ''}`}
+                  style={({ isActive }) => ({ color: isActive ? 'var(--brand-green)' : 'var(--text-muted)', background: isActive ? 'rgba(0,212,120,0.1)' : 'transparent' })}>
+                  <Icon size={16} />
+                  {label}
+                </NavLink>
+              ))}
+            </nav>
+
+            {tier === 'free' && (
+              <div className="mx-3 mb-3 p-3 rounded-lg" style={{ background: 'linear-gradient(135deg, rgba(0,212,120,0.15), rgba(0,229,255,0.08))', border: '1px solid rgba(0,212,120,0.2)' }}>
+                <p className="text-xs font-bold mb-1" style={{ fontFamily: 'Syne', color: 'var(--text-primary)' }}>Upgrade to Starter</p>
+                <p className="text-xs mb-2" style={{ color: 'var(--text-muted)' }}>Daily sends + 2,000 recipients for $7/mo</p>
+                <NavLink to="/pricing" onClick={() => setOpen(false)} className="text-xs font-semibold flex items-center gap-1" style={{ color: 'var(--brand-green)' }}>
+                  Upgrade now <ChevronRight size={12} />
+                </NavLink>
+              </div>
+            )}
+
+            <div className="px-3 pb-4">
+              <button onClick={handleSignOut} className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm w-full" style={{ color: 'var(--text-muted)' }}>
+                <LogOut size={16} /> Sign Out
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
+  );
+};
+
+export default MobileSidebar;
