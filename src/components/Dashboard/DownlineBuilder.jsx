@@ -15,18 +15,18 @@ const TRAFFIC_SITES = [
   {
     category: 'Traffic Exchanges',
     sites: [
-      { name: 'TrafficG',     url: 'https://www.trafficg.com',     desc: 'One of the oldest and most trusted traffic exchanges. Real human visitors guaranteed.',    rating: 5, members: '100k+', price: 'Free / upgrades' },
-      { name: 'Hit2Hit',      url: 'https://www.hit2hit.com',      desc: 'Manual traffic exchange with strong community. Good for landing pages and capture pages.', rating: 4, members: '50k+',  price: 'Free / upgrades' },
+      { name: 'TrafficG',     url: 'https://www.trafficg.com',     desc: 'One of the oldest and most trusted traffic exchanges. Real human visitors guaranteed.',       rating: 5, members: '100k+', price: 'Free / upgrades' },
+      { name: 'Hit2Hit',      url: 'https://www.hit2hit.com',      desc: 'Manual traffic exchange with strong community. Good for landing pages and capture pages.',    rating: 4, members: '50k+',  price: 'Free / upgrades' },
       { name: 'EasyHits4U',   url: 'https://www.easyhits4u.com',   desc: 'Massive membership. 1:1 surf ratio. Popular for beginners getting started with free traffic.', rating: 4, members: '1.5M+', price: 'Free / upgrades' },
-      { name: 'TrafficAdBar', url: 'https://www.trafficadbar.com', desc: 'Unique bar-style advertising. Runs in background while you browse. Passive traffic earning.', rating: 3, members: '80k+',  price: 'Free / upgrades' },
+      { name: 'TrafficAdBar', url: 'https://www.trafficadbar.com', desc: 'Unique bar-style advertising. Runs in background while you browse. Passive traffic earning.',  rating: 3, members: '80k+',  price: 'Free / upgrades' },
     ]
   },
   {
     category: 'Viral Mailers',
     sites: [
-      { name: 'List Infinity',     url: 'https://www.listinfinity.net',     desc: 'Viral list builder. Refer 2 members and unlock free mailing. Grows itself automatically.',  rating: 5, members: '30k+', price: 'Free' },
-      { name: 'ProActiveMailer',   url: 'https://proactivemailer.com',      desc: 'Phil cleans inactive members weekly — keeps the list fresh and responsive.',               rating: 4, members: '15k+', price: 'Free / upgrades' },
-      { name: 'European Safelist', url: 'https://www.europeansafelist.com', desc: 'Great for reaching European marketers. Less competition than US-focused platforms.',         rating: 4, members: '20k+', price: 'Free / $7/mo' },
+      { name: 'List Infinity',     url: 'https://www.listinfinity.net',     desc: 'Viral list builder. Refer 2 members and unlock free mailing. Grows itself automatically.', rating: 5, members: '30k+', price: 'Free' },
+      { name: 'ProActiveMailer',   url: 'https://proactivemailer.com',      desc: 'Phil cleans inactive members weekly — keeps the list fresh and responsive.',              rating: 4, members: '15k+', price: 'Free / upgrades' },
+      { name: 'European Safelist', url: 'https://www.europeansafelist.com', desc: 'Great for reaching European marketers. Less competition than US-focused platforms.',        rating: 4, members: '20k+', price: 'Free / $7/mo' },
     ]
   },
   {
@@ -39,10 +39,10 @@ const TRAFFIC_SITES = [
 ];
 
 const CATEGORY_COLORS = {
-  'Safelists':          'var(--brand-green)',
-  'Traffic Exchanges':  '#60a5fa',
-  'Viral Mailers':      '#f472b6',
-  'Downline Builders':  '#fbbf24',
+  'Safelists':         'var(--brand-green)',
+  'Traffic Exchanges': '#60a5fa',
+  'Viral Mailers':     '#f472b6',
+  'Downline Builders': '#fbbf24',
 };
 
 const StarRating = ({ rating }) => (
@@ -72,8 +72,8 @@ const DownlineBuilder = () => {
 
       <div className="grid grid-cols-3 gap-3 my-5">
         {[
-          { label: 'Recommended Sites', value: totalSites,           color: 'var(--brand-green)' },
-          { label: 'Combined Members',  value: '2.5M+',              color: '#60a5fa' },
+          { label: 'Recommended Sites', value: totalSites,                color: 'var(--brand-green)' },
+          { label: 'Combined Members',  value: '2.5M+',                   color: '#60a5fa' },
           { label: 'Free to Join',      value: `${totalSites - 2} sites`, color: '#fbbf24' },
         ].map(({ label, value, color }) => (
           <div key={label} className="card p-4 text-center">
