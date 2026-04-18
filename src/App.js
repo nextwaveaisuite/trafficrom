@@ -12,10 +12,12 @@ const Pricing            = lazy(() => import('./pages/Pricing'));
 const Features           = lazy(() => import('./pages/Features'));
 const Login              = lazy(() => import('./components/Auth/Login'));
 const Register           = lazy(() => import('./components/Auth/Register'));
+const NextWaveHub        = lazy(() => import('./pages/NextWaveHub'));
 
 const Dashboard          = lazy(() => import('./components/Dashboard/Dashboard'));
 const BannerAds          = lazy(() => import('./components/Dashboard/BannerAds'));
 const LinkCloaker        = lazy(() => import('./components/Dashboard/LinkCloaker'));
+const DownlineBuilder    = lazy(() => import('./components/Dashboard/DownlineBuilder'));
 const Leaderboard        = lazy(() => import('./components/Dashboard/Leaderboard'));
 const Referrals          = lazy(() => import('./components/Dashboard/Referrals'));
 const Analytics          = lazy(() => import('./components/Dashboard/Analytics'));
@@ -67,12 +69,13 @@ function App() {
         <Suspense fallback={<PageLoader />}>
           <Routes>
             {/* Public */}
-            <Route path="/"                 element={<Home />} />
-            <Route path="/founding-members" element={<FoundingMembers />} />
-            <Route path="/pricing"          element={<Pricing />} />
-            <Route path="/features"         element={<Features />} />
-            <Route path="/login"            element={<Login />} />
-            <Route path="/register"         element={<Register />} />
+            <Route path="/"                  element={<Home />} />
+            <Route path="/nextwaveaisuite"   element={<NextWaveHub />} />
+            <Route path="/founding-members"  element={<FoundingMembers />} />
+            <Route path="/pricing"           element={<Pricing />} />
+            <Route path="/features"          element={<Features />} />
+            <Route path="/login"             element={<Login />} />
+            <Route path="/register"          element={<Register />} />
 
             {/* Member Dashboard */}
             <Route path="/dashboard" element={
@@ -95,6 +98,9 @@ function App() {
             } />
             <Route path="/dashboard/links" element={
               <ProtectedRoute><DashboardLayout><LinkCloaker /></DashboardLayout></ProtectedRoute>
+            } />
+            <Route path="/dashboard/downline" element={
+              <ProtectedRoute><DashboardLayout><DownlineBuilder /></DashboardLayout></ProtectedRoute>
             } />
             <Route path="/dashboard/leaderboard" element={
               <ProtectedRoute><DashboardLayout><Leaderboard /></DashboardLayout></ProtectedRoute>
