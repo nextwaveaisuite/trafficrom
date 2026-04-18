@@ -29,7 +29,6 @@ const PRODUCTS = [
 
 const NextWaveHub = () => (
   <div style={{ background: '#0a0e1a', minHeight: '100vh' }}>
-
     <header className="flex items-center justify-between px-6 py-4" style={{ borderBottom: '1px solid #1e2840' }}>
       <div className="flex items-center gap-3">
         <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #00d478, #00e5ff)' }}>
