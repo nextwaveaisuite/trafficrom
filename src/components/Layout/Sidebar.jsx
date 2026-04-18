@@ -1,22 +1,23 @@
 import { NavLink, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard, Send, Clock, Coins, Users, BarChart2,
-  Settings, LogOut, Zap, ChevronRight, Inbox, Image, Trophy, Link2
+  Settings, LogOut, Zap, ChevronRight, Inbox, Image, Trophy, Link2, Globe
 } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 
 const navItems = [
-  { to: '/dashboard',           icon: LayoutDashboard, label: 'Dashboard'    },
-  { to: '/dashboard/compose',   icon: Send,            label: 'Send Email'   },
-  { to: '/dashboard/inbox',     icon: Inbox,           label: 'Read & Earn'  },
-  { to: '/dashboard/history',   icon: Clock,           label: 'Campaigns'    },
-  { to: '/dashboard/credits',   icon: Coins,           label: 'Credits'      },
-  { to: '/dashboard/links',     icon: Link2,           label: 'Link Cloaker' },
-  { to: '/dashboard/banners',   icon: Image,           label: 'Banner Ads'   },
-  { to: '/dashboard/leaderboard',icon: Trophy,         label: 'Leaderboard'  },
-  { to: '/dashboard/referrals', icon: Users,           label: 'Referrals'    },
-  { to: '/dashboard/analytics', icon: BarChart2,       label: 'Analytics'    },
-  { to: '/dashboard/settings',  icon: Settings,        label: 'Settings'     },
+  { to: '/dashboard',           icon: LayoutDashboard, label: 'Dashboard'        },
+  { to: '/dashboard/compose',   icon: Send,            label: 'Send Email'       },
+  { to: '/dashboard/inbox',     icon: Inbox,           label: 'Read & Earn'      },
+  { to: '/dashboard/history',   icon: Clock,           label: 'Campaigns'        },
+  { to: '/dashboard/credits',   icon: Coins,           label: 'Credits'          },
+  { to: '/dashboard/links',     icon: Link2,           label: 'Link Cloaker'     },
+  { to: '/dashboard/downline',  icon: Globe,           label: 'Downline Builder' },
+  { to: '/dashboard/banners',   icon: Image,           label: 'Banner Ads'       },
+  { to: '/dashboard/leaderboard',icon: Trophy,         label: 'Leaderboard'      },
+  { to: '/dashboard/referrals', icon: Users,           label: 'Referrals'        },
+  { to: '/dashboard/analytics', icon: BarChart2,       label: 'Analytics'        },
+  { to: '/dashboard/settings',  icon: Settings,        label: 'Settings'         },
 ];
 
 const Sidebar = () => {
@@ -47,7 +48,12 @@ const Sidebar = () => {
               {(profile.first_name?.[0] || profile.username?.[0] || '?').toUpperCase()}
             </div>
             <div className="overflow-hidden">
-              <p className="text-sm font-semibold truncate" style={{ color: 'var(--text-primary)' }}>{profile.first_name} {profile.last_name}</p>
+              <div className="flex items-center gap-1.5">
+                <p className="text-sm font-semibold truncate" style={{ color: 'var(--text-primary)' }}>{profile.first_name} {profile.last_name}</p>
+                {profile.is_owner && (
+                  <span className="text-xs px-1.5 py-0.5 rounded font-bold shrink-0" style={{ background: 'linear-gradient(135deg, #fbbf24, #f59e0b)', color: '#0a0e1a', fontSize: 9 }}>OWNER</span>
+                )}
+              </div>
               <p className="text-xs truncate" style={{ color: 'var(--text-muted)' }}>@{profile.username}</p>
             </div>
           </div>
