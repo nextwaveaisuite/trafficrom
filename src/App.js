@@ -7,31 +7,35 @@ import Sidebar from './components/Layout/Sidebar';
 import MobileSidebar from './components/Layout/MobileSidebar';
 import AdminSidebar from './components/Admin/AdminSidebar';
 
-const FoundingMembers    = lazy(() => import('./pages/FoundingMembers'));
-const Home               = lazy(() => import('./pages/Home'));
-const Pricing            = lazy(() => import('./pages/Pricing'));
-const Features           = lazy(() => import('./pages/Features'));
-const Login              = lazy(() => import('./components/Auth/Login'));
-const Register           = lazy(() => import('./components/Auth/Register'));
-const NextWaveHub        = lazy(() => import('./pages/NextWaveHub'));
+// Lazy load all pages — only loads when user navigates there
+const FoundingMembers = lazy(() => import('./pages/FoundingMembers'));
 
-const Dashboard          = lazy(() => import('./components/Dashboard/Dashboard'));
-const BannerAds          = lazy(() => import('./components/Dashboard/BannerAds'));
-const LinkCloaker        = lazy(() => import('./components/Dashboard/LinkCloaker'));
-const DownlineBuilder    = lazy(() => import('./components/Dashboard/DownlineBuilder'));
-const Leaderboard        = lazy(() => import('./components/Dashboard/Leaderboard'));
-const Referrals          = lazy(() => import('./components/Dashboard/Referrals'));
-const Analytics          = lazy(() => import('./components/Dashboard/Analytics'));
-const AccountSettings    = lazy(() => import('./components/Dashboard/AccountSettings'));
-const EmailComposer      = lazy(() => import('./components/Dashboard/EmailComposer'));
-const EmailInbox         = lazy(() => import('./components/Dashboard/EmailInbox'));
-const CampaignHistory    = lazy(() => import('./components/Dashboard/CampaignHistory'));
-const CreditManager      = lazy(() => import('./components/Dashboard/CreditManager'));
+const Home        = lazy(() => import('./pages/Home'));
+const Pricing     = lazy(() => import('./pages/Pricing'));
+const Features    = lazy(() => import('./pages/Features'));
+const Terms       = lazy(() => import('./pages/Terms'));
+const Privacy     = lazy(() => import('./pages/Privacy'));
+const Login       = lazy(() => import('./components/Auth/Login'));
+const Register    = lazy(() => import('./components/Auth/Register'));
 
-const AdminLogin         = lazy(() => import('./pages/Admin/AdminLogin'));
-const AdminOverview      = lazy(() => import('./pages/Admin/AdminOverview'));
-const AdminMembers       = lazy(() => import('./pages/Admin/AdminMembers'));
-const AdminCampaigns     = lazy(() => import('./pages/Admin/AdminCampaigns'));
+const Dashboard        = lazy(() => import('./components/Dashboard/Dashboard'));
+const BannerAds        = lazy(() => import('./components/Dashboard/BannerAds'));
+const LinkCloaker      = lazy(() => import('./components/Dashboard/LinkCloaker'));
+const DownlineBuilder  = lazy(() => import('./components/Dashboard/DownlineBuilder'));
+const NextWaveHub      = lazy(() => import('./pages/NextWaveHub'));
+const Leaderboard  = lazy(() => import('./components/Dashboard/Leaderboard'));
+const Referrals    = lazy(() => import('./components/Dashboard/Referrals'));
+const Analytics    = lazy(() => import('./components/Dashboard/Analytics'));
+const AccountSettings = lazy(() => import('./components/Dashboard/AccountSettings'));
+const EmailComposer    = lazy(() => import('./components/Dashboard/EmailComposer'));
+const EmailInbox       = lazy(() => import('./components/Dashboard/EmailInbox'));
+const CampaignHistory  = lazy(() => import('./components/Dashboard/CampaignHistory'));
+const CreditManager    = lazy(() => import('./components/Dashboard/CreditManager'));
+
+const AdminLogin      = lazy(() => import('./pages/Admin/AdminLogin'));
+const AdminOverview   = lazy(() => import('./pages/Admin/AdminOverview'));
+const AdminMembers    = lazy(() => import('./pages/Admin/AdminMembers'));
+const AdminCampaigns  = lazy(() => import('./pages/Admin/AdminCampaigns'));
 const AdminPromoCodes    = lazy(() => import('./pages/Admin/AdminPromoCodes'));
 const AdminPromoSchedule = lazy(() => import('./pages/Admin/AdminPromoSchedule'));
 const AdminBanners       = lazy(() => import('./pages/Admin/AdminBanners'));
@@ -43,6 +47,7 @@ const AdminReports       = lazy(() => import('./pages/Admin/AdminReports'));
 const AdminBroadcasts    = lazy(() => import('./pages/Admin/AdminBroadcasts'));
 const AdminPlaceholder   = lazy(() => import('./pages/Admin/AdminPlaceholder'));
 
+// Page loader
 const PageLoader = () => (
   <div style={{ minHeight: '100vh', background: '#0a0e1a', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 }}>
@@ -70,6 +75,7 @@ const AdminLayout = ({ children }) => (
   </div>
 );
 
+
 function App() {
   return (
     <AuthProvider>
@@ -77,13 +83,15 @@ function App() {
         <Suspense fallback={<PageLoader />}>
           <Routes>
             {/* Public */}
-            <Route path="/"                 element={<Home />} />
-            <Route path="/nextwaveaisuite"  element={<NextWaveHub />} />
-            <Route path="/founding-members" element={<FoundingMembers />} />
-            <Route path="/pricing"          element={<Pricing />} />
-            <Route path="/features"         element={<Features />} />
-            <Route path="/login"            element={<Login />} />
-            <Route path="/register"         element={<Register />} />
+            <Route path="/"                  element={<Home />} />
+            <Route path="/nextwaveaisuite"   element={<NextWaveHub />} />
+            <Route path="/founding-members"  element={<FoundingMembers />} />
+            <Route path="/pricing"  element={<Pricing />} />
+            <Route path="/features" element={<Features />} />
+            <Route path="/terms"    element={<Terms />} />
+            <Route path="/privacy"  element={<Privacy />} />
+            <Route path="/login"    element={<Login />} />
+            <Route path="/register" element={<Register />} />
 
             {/* Member Dashboard */}
             <Route path="/dashboard" element={
